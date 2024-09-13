@@ -1,33 +1,39 @@
 import os
-import csv
+import pandas as pd
 import sys
 from pypdf import PdfWriter
 from tqdm import tqdm # loop counter
 
-try:
-    config_file = csv.reader(open('config.csv',newline=''))
-except:
-    input("No config.csv file found. Press any button to close...")
-    sys.exit(1)
+def read_excel_sheets(file_path):
+    try:
+        # Load the Excel file
+        excel_file = pd.ExcelFile(file_path)
+        
+        # Read the sheets into DataFrames
+        config_df = excel_file.parse('Config')
+        filelist_df = excel_file.parse('FileList')
+        
+        return config_df, filelist_df
+    except FileNotFoundError:
+        input(f"No {file_path} file found. Press any button to close...")
+        sys.exit(1)
+    except Exception as e:
+        input(f"Error reading the Excel file: {e}. Press any button to close...")
+        sys.exit(1)
 
-try:
-    fileList = csv.reader(open('filelist.csv',newline=''))
-except:
-    input("No filelist.csv file found. Press any button to close...")
-    sys.exit(1)
+config_df, filelist_df = read_excel_sheets('process_inputs.xlsx')
+    
+# Remove headers from both DataFrames
+config = config_df.values.tolist()
+fileList = filelist_df.values.tolist()
 
-num_lines = sum(1 for row in open('fileList.csv','r'))-1
-
-# remove headers from both files
-next(fileList)
-next(config_file)
+num_lines = len(fileList)
 
 largest_file_size = 0
 largest_file_path = ""
 
-config = list(config_file)
 for row in tqdm(fileList,total=num_lines):
-    file_name = row[0]+".pdf"
+    file_name = str(row[0])+".pdf"
     treatment_type = row[1]
     # for each config row in the config file
     for config_row in config:
@@ -38,7 +44,7 @@ for row in tqdm(fileList,total=num_lines):
             # go through the config row and grab each input
             for input_path in config_row[2:]:
                 # if the config row is not blank
-                if input_path:
+                if not pd.isna(input_path):
                     #input pdf needs to exist
                     if os.path.exists(input_path+"/"+file_name):
                         merger.append(input_path+"/"+file_name)
