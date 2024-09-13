@@ -1,16 +1,8 @@
-import shutil
+import os
 import csv
 import sys
-import traceback
 from pypdf import PdfWriter
-import glob # get csv and pdf list
 from tqdm import tqdm # loop counter
-
-
-# Append slip cover to PDF
-def append_pdf(master_slip,row):
-    merger.append(master_slip[int(row[1])-1])
-    merger.append("Input/Raw Exhibits/" + row[0])
 
 try:
     config_file = csv.reader(open('config.csv',newline=''))
@@ -30,52 +22,39 @@ num_lines = sum(1 for row in open('fileList.csv','r'))-1
 next(fileList)
 next(config_file)
 
+largest_file_size = 0
+largest_file_path = ""
+
 config = list(config_file)
-
 for row in tqdm(fileList,total=num_lines):
-    merger = PdfWriter()
+    file_name = row[0]+".pdf"
+    treatment_type = row[1]
     # for each config row in the config file
-    for configs in config:
-        # if the config name is the current row's treatment type
-        if configs[0] == row[1]:
-            # go through the config row and grab each input
-            for x in range(len(configs)):
-                # if the config row is not blank
-                if configs[x] != '' and x != 0 and x != 1:
-                    merger.append(configs[x]+"/"+row[0])
-                if x == len(configs)-1:
-                    merger.write(configs[1]+"/"+row[0])
-                    merger.close()
-    '''
-    merger = PdfWriter()
-    # If document is not subject to request to seal
-    if int(row[2]) == 1:
-        shutil.copyfile("Input/Raw Exhibits/"+row[0],"Output/Sealed Filing/" + row[0])
-        shutil.copyfile("Input/Raw Exhibits/"+row[0],"Output/Public Version/" + row[0])
-    # If document is fully redacted
-    elif int(row[2]) == 2:
-        shutil.copyfile(master_sealing[int(row[1])-1],"Output/Sealing Motion/" + row[0])
-        shutil.copyfile(master_public[int(row[1])-1],"Output/Public Version/" + row[0])
-        append_pdf(master_slip=master_sealed,row=row)
-        merger.write("Output/Sealed Filing/" + row[0])
-    # If document is partially redacted
-    elif int(row[2]) == 3:
-        if (int(row[3]) == 0):
-            append_pdf(master_slip=master_sealed,row=row)
-            merger.write("Output/Sealed Filing/" + row[0])
-        elif (int(row[3]) == 1):
-            # Merger sealing motion and public motion files
-            append_pdf(master_slip=master_sealing,row=row)
-            merger.write("Output/Sealing Motion/" + row[0])
-            merger.close()
-            merger = PdfWriter()
-            append_pdf(master_slip=master_public,row=row)
-            merger.write("Output/Public Version/" + row[0])
-        else:
-            print("\nSkipping row containing: " + row[0] + " file name. Incorrect Partial Redaction value.")
-    else:
-        print("\nSkipping row containing: " + row[0] + " file name. Incorrect ExhibitType")
-    merger.close()
-    '''
+    for config_row in config:
+        merger = PdfWriter()
 
-# input("\nSuccess! Press any button to close...")
+        # if the config name is the current row's treatment type
+        if config_row[0] == treatment_type:
+            # go through the config row and grab each input
+            for input_path in config_row[2:]:
+                # if the config row is not blank
+                if input_path:
+                    #input pdf needs to exist
+                    if os.path.exists(input_path+"/"+file_name):
+                        merger.append(input_path+"/"+file_name)
+                    else:
+                        input(f"\nError: No valid PDF path found for treatment type '{treatment_type}' and input '{input_path}/{file_name}'. \nPress any button to close...")
+                        sys.exit(1)
+            # output path needs to exist
+            if (os.path.exists(config_row[1])):
+                merger.write(config_row[1]+"/"+file_name)
+                merger.close()
+            else:
+                input(f"\nError: No valid output path exists for '{config_row[1]}'. Press any button to close...")
+            file_size = os.path.getsize(config_row[1]+"/"+file_name)
+            # Check for the largest file size that was outputted
+            if file_size > largest_file_size:
+                largest_file_path = (config_row[1]+"/"+file_name)
+                largest_file_size = file_size
+print(f"Success! The largest PDF file written was '{largest_file_path}' with a size of {largest_file_size/(1024*1024):.2f} megabytes.")
+# input("Press any button to close...")
