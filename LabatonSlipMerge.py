@@ -24,39 +24,30 @@ def read_excel_sheets(file_path):
 def validate_paths_and_explain(config_df, filelist_df):
     # Convert DataFrames to list of lists
     config = config_df.values.tolist()
+    file_list = filelist_df.values.tolist()
 
     # Store errors and explanations
     errors = []
     explanations = {}
 
-    # Iterate through each row in the Config tab to gather unique treatment configurations
-    for config_row in config:
-        if len(config_row) < 2:
-            errors.append(f"Config row for treatment type '{config_row[0]}' is missing the output folder.")
-            continue
+    # Iterate through each row in the FileList
+    for file_row in file_list:
+        file_name = str(file_row[0]) + ".pdf"  # Get the file name with the .pdf extension
+        treatment_type = file_row[1]  # Get the treatment type from the FileList
 
-        treatment_type = config_row[0]
-        output_path = config_row[1]
-        
-        # Gather input paths for this configuration
-        input_paths = [input_path for input_path in config_row[2:] if not pd.isna(input_path)]
-        
-        # Validate input and output paths
-        for input_path in input_paths:
-            if not os.path.exists(input_path):
-                errors.append(f"Input path does not exist: {input_path}")
+        # Iterate through the Config to find the matching treatment type
+        for config_row in config:
+            if config_row[0] == treatment_type:  # If treatment type matches
+                output_path = config_row[1]  # The output path from the Config row
+                input_paths = [input_path for input_path in config_row[2:] if not pd.isna(input_path)]  # Get the input paths
 
-        if not os.path.exists(output_path):
-            errors.append(f"Output path does not exist: {output_path}")
+                # Check if the file exists in any of the input paths
+                for input_path in input_paths:
+                    pdf_path = os.path.join(input_path, file_name)
 
-        # Store a general explanation for this treatment type's configuration
-        if treatment_type not in explanations:
-            explanations[treatment_type] = []
-        
-        explanations[treatment_type].append({
-            "input_paths": input_paths,
-            "output_path": output_path
-        })
+                    if not os.path.exists(pdf_path):
+                        pdf_path = pdf_path.replace("\\","/")
+                        errors.append(f"Error: No valid PDF found for filepath '{pdf_path}' within treatment type '{treatment_type}'.")
 
     # Display errors if any
     if errors:
@@ -66,23 +57,19 @@ def validate_paths_and_explain(config_df, filelist_df):
     else:
         print("Validation passed successfully!")
 
-    # Provide a general explanation of the merging process
+    input("\nPress any button to continue to config explanation....")
+    # Provide a general explanation of the merging process by treatment type
     print("\nPDF merging process summary by Treatment Type:")
-    for treatment_type, configs in explanations.items():
-        total_inputs = sum(len(config['input_paths']) for config in configs)
-        
+    for config_row in config:
+        treatment_type = config_row[0]
+        output_path = config_row[1]
+        input_paths = [input_path for input_path in config_row[2:] if not pd.isna(input_path)]
+
         print(f"\nTreatment Type: '{treatment_type}'")
-        print(f"  Total # of PDFs for '{treatment_type}' treatment type: {total_inputs}")
-        
-        for idx, config in enumerate(configs, 1):
-            print(f"  Merge configuration {idx}:")
-            print(f"    Merging order (top to bottom):")
-            
-            # Display the merging order for this configuration
-            for i, input_path in enumerate(config['input_paths'], 1):
-                print(f"      {i}. {input_path}")
-            
-            print(f"    Output folder: {config['output_path']}\n")
+        print(f"  Output path: {output_path}")
+        print(f"  Input paths being merged (in order):")
+        for input_path in input_paths:
+            print(f"    - {input_path}")
 
 config_df, filelist_df = read_excel_sheets('process_inputs.xlsx')
 validate_paths_and_explain(config_df,filelist_df)
