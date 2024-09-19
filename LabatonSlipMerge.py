@@ -4,7 +4,7 @@ import sys
 from pypdf import PdfWriter
 from tqdm import tqdm
 import tkinter as tk
-from tkinter import messagebox, scrolledtext, ttk
+from tkinter import messagebox, scrolledtext
 from PIL import Image, ImageTk
 
 def read_excel_sheets(file_path):
@@ -27,7 +27,6 @@ def validate_paths_and_explain(config, file_list, output_text):
 
     output_text.delete('1.0', tk.END)
     errors = []
-    explanations = {}
 
     for file_row in file_list:
         file_name = str(file_row[0]) + ".pdf"
@@ -110,8 +109,15 @@ def run_merges(config, file_list, scrub_metadata, output_text):
 
 def main_gui():
     def get_excel_file_path():
-        program_dir = os.path.dirname(os.path.abspath(__file__))
-        file_path = os.path.join(program_dir, 'process_inputs.xlsx')
+        if getattr(sys, 'frozen', False):
+        # If the application is run as a bundle (PyInstaller executable)
+            base_path = os.path.dirname(sys.executable)
+        else:
+        # If run in a normal Python environment (development)
+            base_path = os.path.dirname(os.path.abspath(__file__))
+
+        file_path = os.path.join(base_path, 'process_inputs.xlsx')
+
         if os.path.exists(file_path):
             return file_path
         else:
@@ -135,7 +141,7 @@ def main_gui():
 
     # GUI setup
     root = tk.Tk()
-    root.title("Labaton Slip Merge Program")
+    root.title("Labaton Slip Merge")
     root.geometry("800x600")
 
     # Define colors
