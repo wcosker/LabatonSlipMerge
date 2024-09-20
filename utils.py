@@ -1,7 +1,8 @@
+# Standard Python
 import os
 import sys
 import webbrowser
-
+# Third party
 from tkinter import messagebox
 import requests
 import pandas as pd

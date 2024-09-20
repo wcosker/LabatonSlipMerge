@@ -1,5 +1,6 @@
+# Standard Python
 import os
-
+# Third party
 import tkinter as tk
 import pandas as pd
 
