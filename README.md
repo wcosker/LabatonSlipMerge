@@ -21,10 +21,10 @@ This tab should list the PDF files you want to merge and their exhibit numbers. 
 ### Tab 2: **Config**
 This tab defines how the files will be merged and where to save the final document. Example:
 
-| Treatment Type | Output Path          | Input Path 1       | Input Path 2       |
-|----------------|----------------------|---------------------|---------------------|
-| Public         | output/public  | input/GenericSlips  | input/Exhibits  |
-| Sealed         | output/sealed | input/Exhibits  |                     |
+| Treatment Type | Output Path          | Input Path 1        | Input Path 2       | Input Path x... |
+|----------------|----------------------|---------------------|--------------------|-----------------|
+| Public         | output/public        | input/GenericSlips  | input/Exhibits     | (Path to input) |
+| Sealed         | output/sealed        | input/Exhibits      |                    |                 |
 
 ## How to Use the Tool
 1. **Run the Application**: Double-click the `Labaton_Slip_Merge.exe` file to launch the application.
