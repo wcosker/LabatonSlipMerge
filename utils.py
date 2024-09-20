@@ -27,7 +27,7 @@ def get_excel_file_path():
             return file_path
         else:
             messagebox.showerror("Error", "Excel file 'process_inputs.xlsx' not found in the program directory.")
-            sys.exit(1)
+            return
 
 def read_excel_sheets(file_path):
     try:

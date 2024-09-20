@@ -35,10 +35,12 @@ def run_merges(config, file_list, scrub_metadata, output_text):
         file_name = str(row[0]) + ".pdf"
         treatment_type = row[1]
 
+        has_valid_treatment = False
         for config_row in config:
             merger = PdfWriter()
 
             if config_row[0] == treatment_type:
+                has_valid_treatment = True
                 for input_path in config_row[2:]:
                     if not pd.isna(input_path):
                         pdf_path = os.path.join(input_path, file_name)
@@ -66,6 +68,11 @@ def run_merges(config, file_list, scrub_metadata, output_text):
                     messagebox.showerror("Error", f"No valid output path exists for '{output_path}'")
                     progress_window.destroy()  # Close the progress window if there's an error
                     return
+
+        if not has_valid_treatment:
+            messagebox.showerror("Error", f"No valid treatment type found in the Config for '{file_name}' with treatment type '{treatment_type}'.")
+            progress_window.destroy()  # Close the progress window if there's an error
+            return
 
         # Update the progress bar and the GUI
         progress_bar['value'] = i + 1
