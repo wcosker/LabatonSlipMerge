@@ -13,6 +13,16 @@ def check_version(current_version,api_link,repo_link):
         messagebox.showerror("Version Error", "You are using an outdated version of this program.\nPlease update to the latest version by downloading the latest release.")
         webbrowser.open(repo_link)
 
+def resource_path(relative_path):
+    """ Get the absolute path to the resource, works for dev and PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores the path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 def get_excel_file_path():
         if getattr(sys, 'frozen', False):
         # If the application is run as a bundle (PyInstaller executable)

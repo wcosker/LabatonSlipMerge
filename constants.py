@@ -1,5 +1,5 @@
 # Current version of the application
-CURRENT_VERSION = "Pre-Release"
+CURRENT_VERSION = "Pre-Release Demo"
 API_LINK = "https://api.github.com/repos/wcosker/LabatonSlipMerge/releases/latest"
 REPO_LINK = "https://github.com/wcosker/LabatonSlipMerge/releases"
 

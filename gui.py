@@ -5,7 +5,7 @@ from PIL import Image, ImageTk
 # Locally created packages
 from merging import run_merges
 from validate import validate_paths_and_explain
-from utils import get_excel_file_path,read_excel_sheets,check_version
+from utils import get_excel_file_path,read_excel_sheets,check_version,resource_path
 from constants import CURRENT_VERSION, ICON_PATH, BG_COLOR, BUTTON_COLOR, TEXT_COLOR, HEADER_COLOR, API_LINK, REPO_LINK
 
 def main_gui():
@@ -31,7 +31,7 @@ def main_gui():
     root.configure(bg=BG_COLOR)
 
     # Set window icon
-    icon_image = Image.open(ICON_PATH)
+    icon_image = Image.open(resource_path(ICON_PATH))
     icon_size = (32, 32)
     icon_image.thumbnail(icon_size, Image.LANCZOS)
     icon_photo = ImageTk.PhotoImage(icon_image)
