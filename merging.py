@@ -44,7 +44,7 @@ def run_merges(config, file_list, preserve_metadata, output_text):
                 has_valid_treatment = True
                 for input_path in config_row[2:]:
                     if not pd.isna(input_path):
-                        pdf_path = os.path.join(input_path, file_name)
+                        pdf_path = os.path.join("Working Directory/"+input_path, file_name)
 
                         if os.path.exists(pdf_path):
                             merger.append(pdf_path)
@@ -55,11 +55,12 @@ def run_merges(config, file_list, preserve_metadata, output_text):
                                     merger.add_metadata(metadata)
                         else:
                             pdf_path = pdf_path.replace("\\", "/")
+                            pdf_path = pdf_path.replace("Working Directory/","")
                             messagebox.showerror("Error", f"No valid PDF path found for '{pdf_path}'")
                             progress_window.destroy()  # Close the progress window if there's an error
                             return
 
-                output_path = config_row[1]
+                output_path = "Working Directory/"+config_row[1]
                 if os.path.exists(output_path):
                     merged_pdf_path = os.path.join(output_path, file_name)
                     merger.write(merged_pdf_path)
@@ -68,9 +69,11 @@ def run_merges(config, file_list, preserve_metadata, output_text):
                     file_size = os.path.getsize(merged_pdf_path)
                     if file_size > largest_file_size:
                         largest_file_path = merged_pdf_path.replace("\\","/")
+                        largest_file_path = largest_file_path.replace("Working Directory/","")
                         largest_file_size = file_size
                 else:
                     output_path = output_path.replace("\\", "/")
+                    output_path = output_path.replace("Working Directory/","")
                     messagebox.showerror("Error", f"No valid output path exists for '{output_path}'")
                     progress_window.destroy()  # Close the progress window if there's an error
                     return

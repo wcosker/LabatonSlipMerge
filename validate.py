@@ -24,10 +24,11 @@ def validate_paths_and_explain(config, file_list, output_text):
                 input_paths = [input_path for input_path in config_row[2:] if not pd.isna(input_path)]
 
                 for input_path in input_paths:
-                    pdf_path = os.path.join(input_path, file_name)
+                    pdf_path = os.path.join("Working Directory/"+input_path, file_name)
 
                     if not os.path.exists(pdf_path):
                         pdf_path = pdf_path.replace("\\", "/")
+                        pdf_path = pdf_path.replace("Working Directory/","")
                         errors.append(f"Error: No valid PDF found for '{pdf_path}' within treatment type '{treatment_type}'.")
         
         if not has_valid_treatment:

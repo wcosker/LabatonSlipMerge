@@ -31,7 +31,7 @@ def get_excel_file_path():
         # If run in a normal Python environment (development)
             base_path = os.path.dirname(os.path.abspath(__file__))
 
-        file_path = os.path.join(base_path, 'process_inputs.xlsx')
+        file_path = os.path.join(base_path+"/Working Directory/", 'process_inputs.xlsx')
 
         if os.path.exists(file_path):
             return file_path
