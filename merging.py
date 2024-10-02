@@ -1,13 +1,13 @@
 # Standard Python
 import os
 # Third party
-from pypdf import PdfWriter
+from pypdf import PdfWriter,PdfReader
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk  # Import ttk for Progressbar widget
 import pandas as pd
 
-def run_merges(config, file_list, scrub_metadata, output_text):
+def run_merges(config, file_list, preserve_metadata, output_text):
     # Clear the text box before starting
     output_text.delete('1.0', tk.END)
 
@@ -30,6 +30,7 @@ def run_merges(config, file_list, scrub_metadata, output_text):
     # Update the GUI to show the new window
     progress_window.update()
 
+    metadata = {}
     # Merging process
     for i, row in enumerate(file_list):
         file_name = str(row[0]) + ".pdf"
@@ -47,6 +48,11 @@ def run_merges(config, file_list, scrub_metadata, output_text):
 
                         if os.path.exists(pdf_path):
                             merger.append(pdf_path)
+                            if preserve_metadata:
+                                reader = PdfReader(pdf_path)
+                                if reader.metadata:
+                                    metadata.update(reader.metadata)
+                                    merger.add_metadata(metadata)
                         else:
                             pdf_path = pdf_path.replace("\\", "/")
                             messagebox.showerror("Error", f"No valid PDF path found for '{pdf_path}'")

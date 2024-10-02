@@ -6,8 +6,10 @@ REPO_LINK = "https://github.com/wcosker/LabatonSlipMerge/releases"
 # Icon path
 ICON_PATH = "assets/icon.png"
 
+# Logo path
+LOGO_PATH = "assets/logo.png"
+
 # GUI Colors
 BG_COLOR = "#bfd1fc"
-BUTTON_COLOR = "#062984"
-TEXT_COLOR = "#002C54"
+BUTTON_COLOR = "#002C54"
 HEADER_COLOR = "#dceeff"
