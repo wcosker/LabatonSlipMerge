@@ -71,5 +71,5 @@ def main_gui():
     output_text = scrolledtext.ScrolledText(root, width=95, height=25, wrap=tk.WORD, font=('Helvetica', 12), bg=HEADER_COLOR, fg=BUTTON_COLOR)
     output_text.pack(padx=20, pady=10)
 
-    check_version(CURRENT_VERSION,API_LINK,REPO_LINK)
+    # check_version(CURRENT_VERSION,API_LINK,REPO_LINK)
     root.mainloop()
