@@ -1,7 +1,7 @@
 # Current version of the application
 CURRENT_VERSION = "NO RELEASE NAME"
-# API_LINK = "https://api.github.com/repos/wcosker/LabatonSlipMerge/releases/latest"
-# REPO_LINK = "https://github.com/wcosker/LabatonSlipMerge/releases"
+API_LINK = "https://api.github.com/repos/wcosker/LabatonSlipMerge/releases/latest"
+REPO_LINK = "https://github.com/wcosker/LabatonSlipMerge/releases"
 
 # Icon path
 ICON_PATH = "assets/icon.png"
