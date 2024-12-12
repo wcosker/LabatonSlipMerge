@@ -17,7 +17,7 @@ def validate_paths_and_explain(config, file_list, output_text):
         treatment_type = file_row[1]
 
         has_valid_treatment = False
-        for config_row in config:        
+        for config_row in config:
             if config_row[0] == treatment_type:
                 has_valid_treatment = True
                 output_path = config_row[1]

@@ -26,8 +26,8 @@ def main_gui():
     
     # GUI setup
     root = tk.Tk()
-    root.title("Labaton Slip Merge")
-    root.geometry("800x600")
+    root.title("LKS Slip Merge")
+    root.geometry("800x575")
     root.configure(bg=BG_COLOR)
 
     # Set window icon
@@ -68,8 +68,15 @@ def main_gui():
 
 
     # Scrolled Text box for output display
-    output_text = scrolledtext.ScrolledText(root, width=95, height=25, wrap=tk.WORD, font=('Helvetica', 12), bg=HEADER_COLOR, fg=BUTTON_COLOR)
+    output_text = scrolledtext.ScrolledText(root, width=95, height=20, wrap=tk.WORD, font=('Helvetica', 12), bg=HEADER_COLOR, fg=BUTTON_COLOR)
     output_text.pack(padx=20, pady=10)
+
+    # Add version label at the bottom of the GUI
+    version_frame = tk.Frame(root, bg=BG_COLOR)
+    version_frame.pack(side=tk.BOTTOM, fill=tk.X, pady=(0, 10))  # Add padding for better visibility
+
+    version_label = tk.Label(version_frame, text="V"+CURRENT_VERSION, font=('Helvetica', 8), bg=BG_COLOR, fg=BUTTON_COLOR)
+    version_label.pack(anchor='w',padx=20)  # Align it to the center
 
     # check_version(CURRENT_VERSION,API_LINK,REPO_LINK)
     root.mainloop()
