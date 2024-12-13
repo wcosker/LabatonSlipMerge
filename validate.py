@@ -5,10 +5,7 @@ import tkinter as tk
 import pandas as pd
 
 def validate_paths_and_explain(config, file_list, output_text):
-    output_text.tag_config('error', foreground='#FF0000')  # Red for errors
-    output_text.tag_config('success', foreground='#006400')  # Green for success
-    output_text.tag_config('heading', foreground='#062984', font=('Helvetica', 12, 'bold'))
-
+    # Clear text before adding more
     output_text.delete('1.0', tk.END)
     errors = []
 
@@ -21,6 +18,10 @@ def validate_paths_and_explain(config, file_list, output_text):
             if config_row[0] == treatment_type:
                 has_valid_treatment = True
                 output_path = config_row[1]
+                if not os.path.exists("Working Directory/"+output_path):
+                    output_path =  output_path.replace("\\","/")
+                    output_path = output_path.replace("\\","/")
+                    errors.append(f"Error: No valid output path found for '{output_path}' within treatment type '{treatment_type}'")
                 input_paths = [input_path for input_path in config_row[2:] if not pd.isna(input_path)]
 
                 for input_path in input_paths:

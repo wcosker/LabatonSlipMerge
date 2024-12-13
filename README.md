@@ -40,3 +40,5 @@ If you encounter any errors, the application will display messages to help you i
 
 ## Support
 For help or questions, please reach out to Will Cosker at wcosker@labaton.com
+
+pyinstaller --onefile --noconsole --icon=assets/icon.ico --add-data "assets;assets" main.py

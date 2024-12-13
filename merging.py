@@ -12,8 +12,7 @@ def run_merges(config, file_list, preserve_metadata, output_text):
     output_text.delete('1.0', tk.END)
 
     num_lines = len(file_list)
-    largest_file_size = 0
-    largest_file_path = ""
+    output_files = []
     
     # Create a separate pop-up window for the progress bar
     progress_window = tk.Toplevel()
@@ -67,10 +66,10 @@ def run_merges(config, file_list, preserve_metadata, output_text):
                     merger.close()
 
                     file_size = os.path.getsize(merged_pdf_path)
-                    if file_size > largest_file_size:
-                        largest_file_path = merged_pdf_path.replace("\\","/")
-                        largest_file_path = largest_file_path.replace("Working Directory/","")
-                        largest_file_size = file_size
+                    output_files.append((
+                        merged_pdf_path.replace("\\", "/").replace("Working Directory/", ""),
+                        file_size
+                    ))
                 else:
                     output_path = output_path.replace("\\", "/")
                     output_path = output_path.replace("Working Directory/","")
@@ -90,5 +89,10 @@ def run_merges(config, file_list, preserve_metadata, output_text):
     # Destroy the progress window when the merging is complete
     progress_window.destroy()
 
+    # Sort the output files by size in descending order
+    output_files.sort(key=lambda x: x[1], reverse=True)
+
     # Display success message in the output_text box
-    output_text.insert(tk.END, f"Success! The largest PDF file written was '{largest_file_path}' with a size of {largest_file_size / (1024 * 1024):.2f} MB.\n", 'success')
+    output_text.insert(tk.END, "Success! \n\nMerged PDF files in descending order of size:\n", 'success')
+    for file_path, size in output_files:
+        output_text.insert(tk.END, f"    - {file_path}: {size / (1024 * 1024):.2f} MB\n", 'success')

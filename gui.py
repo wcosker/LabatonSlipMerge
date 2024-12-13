@@ -71,6 +71,10 @@ def main_gui():
     output_text = scrolledtext.ScrolledText(root, width=95, height=20, wrap=tk.WORD, font=('Helvetica', 12), bg=HEADER_COLOR, fg=BUTTON_COLOR)
     output_text.pack(padx=20, pady=10)
 
+    output_text.tag_config('error', foreground='#FF0000')  # Red for errors
+    output_text.tag_config('success', foreground='#006400')  # Green for success
+    output_text.tag_config('heading', foreground='#062984', font=('Helvetica', 12, 'bold'))
+
     # Add version label at the bottom of the GUI
     version_frame = tk.Frame(root, bg=BG_COLOR)
     version_frame.pack(side=tk.BOTTOM, fill=tk.X, pady=(0, 10))  # Add padding for better visibility
